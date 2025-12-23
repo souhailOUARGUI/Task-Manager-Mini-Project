@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backendtaskmanager.enums.TaskStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -28,8 +29,9 @@ public class Task {
     private String description;
     private LocalDate dueDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean completed = false;
+    private TaskStatus status = TaskStatus.PENDING;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
