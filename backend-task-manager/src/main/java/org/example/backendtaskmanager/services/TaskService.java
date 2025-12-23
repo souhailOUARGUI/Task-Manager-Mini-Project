@@ -31,7 +31,7 @@ public class TaskService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .dueDate(request.getDueDate())
-                .status(TaskStatus.PENDING) // ✅ Corrected: Set default status to PENDING
+                .status(TaskStatus.PENDING)
                 .project(project)
                 .build();
 
