@@ -1,0 +1,17 @@
+package org.example.backendtaskmanager.repositories;
+
+import org.example.backendtaskmanager.entities.Task;
+import org.example.backendtaskmanager.enums.TaskStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+
+@Repository
+public interface TaskRepository extends JpaRepository<Task, Long> {
+
+    List<Task> findByProjectId(Long projectId);
+    long contByProjectId(Long projectId);
+    long countByProjectIdAndStatus(Long projectId, TaskStatus status);
+}
