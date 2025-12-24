@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter , Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -11,28 +11,37 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";     
 import Dashboard from "./pages/Dashboard";
 import './App.css'
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
 
 function App() {
 
   return (
-  <Router>
-      <AuthProvider>
-        <Navbar />
+<AuthProvider>
+      <BrowserRouter>
         <Routes>
-          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          <Route element={<ProtectedRoute />}>
-             <Route path="/dashboard" element={<Dashboard />} />
-             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          </Route>
-
-          {/* Redirect unknown Urls to login page */}
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Projects />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <ProjectDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-      </AuthProvider>
-    </Router>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
