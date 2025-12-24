@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
 
 
@@ -10,6 +10,9 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const message = location.state?.message || '';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +23,7 @@ const Login = () => {
             await login(email, password);
             navigate("/");
         } catch (error) {
-            setError(error.response?.data?.message || 'Login failed');
+            setError(error.message || 'Login failed. Please try again.');
         }finally{
             setLoading(false);
         }
@@ -31,6 +34,14 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
         
+        {/*  Success Message  */}
+        {message && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {message}
+          </div>
+        )}
+
+        {/*  Error Message  */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
