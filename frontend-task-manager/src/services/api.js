@@ -1,50 +1,71 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-api.interceptors.request.use((config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;  
-    }
-    return config;}, (error) => Promise.reject(error)));
+// API Base Url uses Vite proxy in development
+const API_BASE_URL = '/api';
 
 
-// to handle 401 reponses 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+const apiRequest = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('token');
+  
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+  
+  // Handle 401 unauthorized
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+    throw new Error('Unauthorized');
   }
-);
+
+  const data = await response.json().catch(() => null);
+  
+  if (!response.ok) {
+    throw new Error(data?.message || `Request failed with status ${response.status}`);
+  }
+  
+  return { data, status: response.status };
+};
 
 // Auth API
-
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
+  login: (credentials) => apiRequest('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  }),
+  register: (userData) => apiRequest('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
 };
 
+// Project API
 export const projectAPI = {
-  getAll: () => api.get('/projects'),
-  getById: (id) => api.get(`/projects/${id}`),
-  create: (data) => api.post('/projects', data),
+  getAll: () => apiRequest('/projects'),
+  getById: (id) => apiRequest(`/projects/${id}`),
+  create: (data) => apiRequest('/projects', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
 };
 
+// Task API
 export const taskAPI = {
-  getByProject: (projectId) => api.get(`/projects/${projectId}/tasks`),
-  create: (projectId, data) => api.post(`/projects/${projectId}/tasks`, data),
-  complete: (projectId, taskId) => api.put(`/projects/${projectId}/tasks/${taskId}/complete`),
-  delete: (projectId, taskId) => api.delete(`/projects/${projectId}/tasks/${taskId}`),
+  getByProject: (projectId) => apiRequest(`/projects/${projectId}/tasks`),
+  create: (projectId, data) => apiRequest(`/projects/${projectId}/tasks`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  complete: (projectId, taskId) => apiRequest(`/projects/${projectId}/tasks/${taskId}/complete`, {
+    method: 'PUT',
+  }),
+  delete: (projectId, taskId) => apiRequest(`/projects/${projectId}/tasks/${taskId}`, {
+    method: 'DELETE',
+  }),
 };
-
-export default api;
