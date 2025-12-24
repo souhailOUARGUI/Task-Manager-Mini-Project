@@ -16,7 +16,10 @@ This is A full-stack application for managing tasks and projects.
 ---
 
 
-## classDiagram
+## Class Diagram
+
+```mermaid
+classDiagram
     direction TB
     
    
