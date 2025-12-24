@@ -111,45 +111,59 @@ const ProjectDetail = () => {
               </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 max-w-3xl mx-auto">
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`bg-white rounded-lg shadow-md p-4 flex items-center justify-between ${
+                  className={`bg-white rounded-lg shadow-md p-4 ${
                     isTaskCompleted(task) ? 'opacity-75' : ''
                   }`}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-start gap-4">
                     <input
                       type="checkbox"
                       checked={isTaskCompleted(task)}
                       onChange={() => !isTaskCompleted(task) && handleCompleteTask(task.id)}
                       disabled={isTaskCompleted(task)}
-                      className="w-5 h-5 cursor-pointer"
+                      className="w-5 h-5 cursor-pointer mt-1"
                     />
-                    <div>
-                      <h3 className={`font-semibold ${isTaskCompleted(task) ? 'line-through text-gray-500' : ''}`}>
-                        {task.title}
-                      </h3>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-4">
+                        <h3 className={`font-semibold text-lg ${isTaskCompleted(task) ? 'line-through text-gray-500' : ''}`}>
+                          {task.title}
+                        </h3>
+                        <span className={`text-xs px-3 py-1 rounded-full font-medium whitespace-nowrap ${
+                          isTaskCompleted(task) ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {task.status}
+                        </span>
+                      </div>
                       {task.description && (
-                        <p className="text-gray-600 text-sm">{task.description}</p>
+                        <p className="text-gray-600 text-sm mt-1">{task.description}</p>
                       )}
-                      {task.dueDate && (
-                        <p className="text-sm text-gray-500">Due: {task.dueDate}</p>
-                      )}
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        isTaskCompleted(task) ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {task.status}
-                      </span>
+                      <div className="flex items-center justify-between mt-3">
+                        {task.dueDate ? (
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Due: {task.dueDate}</span>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+                        <button
+                          onClick={() => handleDeleteTask(task.id)}
+                          className="text-red-500 hover:text-red-700 text-sm font-medium flex items-center gap-1"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleDeleteTask(task.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
                 </div>
               ))}
             </div>

@@ -1,5 +1,6 @@
 import {Link,  useNavigate} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logo from '../assets/logo.svg';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -13,9 +14,10 @@ const Navbar = () => {
     <nav className="bg-blue-600 text-white shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Link to="/" className="text-xl font-bold">
-            Task Manager
-          </Link>
+          <Link to="/" className="text-xl font-bold flex items-center gap-2">
+            <img src={logo} alt="Logo" className="h-8 w-8" />
+                Task Manager
+            </Link>
           {user && (
             <div className="flex items-center gap-4">
               <span>Hello, {user.name}</span>
