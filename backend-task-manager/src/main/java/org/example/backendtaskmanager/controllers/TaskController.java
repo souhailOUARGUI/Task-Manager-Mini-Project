@@ -44,6 +44,14 @@ public class TaskController {
         return ResponseEntity.ok(taskService.markTaskCompleted(projectId, taskId, userDetails.getUsername()));
     }
 
+    @PutMapping("/{taskId}/toggle")
+    public ResponseEntity<TaskResponse> toggleTaskStatus(
+            @PathVariable Long projectId,
+            @PathVariable Long taskId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(taskService.toggleTaskStatus(projectId, taskId, userDetails.getUsername()));
+    }
+
     @DeleteMapping("/{taskId}")
     public ResponseEntity<Void> deleteTask(
             @PathVariable Long projectId,

@@ -62,6 +62,25 @@ public class TaskService {
         return mapToResponse(task);
     }
 
+    public TaskResponse toggleTaskStatus(Long projectId, Long taskId, String userEmail) {
+        // 1. Verify user owns the project
+        getProjectForUser(projectId, userEmail);
+
+        // 2. Find the task
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        // 3. Toggle status
+        if (task.getStatus() == TaskStatus.COMPLETED) {
+            task.setStatus(TaskStatus.PENDING);
+        } else {
+            task.setStatus(TaskStatus.COMPLETED);
+        }
+
+        task = taskRepository.save(task);
+        return mapToResponse(task);
+    }
+
 
     public void deleteTask(Long projectId, Long taskId, String userEmail) {
         getProjectForUser(projectId, userEmail);
