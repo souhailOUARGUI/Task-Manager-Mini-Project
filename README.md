@@ -59,7 +59,7 @@ classDiagram
     User "1" --o "*" Project : owns
     Project "1" --o "*" Task : contains
     Task --> TaskStatus : has
-    
+```
 ---
 ## Database Setup
 
