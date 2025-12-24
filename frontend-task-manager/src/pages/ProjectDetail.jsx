@@ -44,12 +44,12 @@ const ProjectDetail = () => {
     }
   };
 
-  const handleCompleteTask = async (taskId) => {
+  const handleToggleTask = async (taskId) => {
     try {
-      await taskAPI.complete(id, taskId);
+      await taskAPI.toggle(id, taskId);
       fetchData();
     } catch (err) {
-      setError('Failed to complete task');
+      setError('Failed to update task status');
     }
   };
 
@@ -123,8 +123,7 @@ const ProjectDetail = () => {
                     <input
                       type="checkbox"
                       checked={isTaskCompleted(task)}
-                      onChange={() => !isTaskCompleted(task) && handleCompleteTask(task.id)}
-                      disabled={isTaskCompleted(task)}
+                      onChange={() => handleToggleTask(task.id)}
                       className="w-5 h-5 cursor-pointer mt-1"
                     />
                     <div className="flex-1 min-w-0">

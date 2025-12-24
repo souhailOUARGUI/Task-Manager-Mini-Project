@@ -65,6 +65,9 @@ export const taskAPI = {
   complete: (projectId, taskId) => apiRequest(`/projects/${projectId}/tasks/${taskId}/complete`, {
     method: 'PUT',
   }),
+  toggle: (projectId, taskId) => apiRequest(`/projects/${projectId}/tasks/${taskId}/toggle`, {
+    method: 'PUT',
+  }),
   delete: (projectId, taskId) => apiRequest(`/projects/${projectId}/tasks/${taskId}`, {
     method: 'DELETE',
   }),
